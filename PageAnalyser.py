@@ -1,28 +1,7 @@
 from HTML_parsing import Page
+from Summarize import Text
 import sys
 import nltk
-import re
-import heapq
-from wordcloud import WordCloud, STOPWORDS
-import matplotlib.pyplot as plt
-
-
-nltk.data.path.append("/nltk_data")
-
-def Analyse_Page(url):
-    page = Page()
-    page.seturl(url)
-    page.extract_html_page()
-    page.getLinks()
-
-
-def manage_last_point(x):
-    x=x.strip().lower()
-    if x[-1]=='.':
-        x=x[0:-1]
-    else:
-        x=x
-    return x
 
 
 def consider_internal_links(page):
@@ -33,9 +12,7 @@ def consider_internal_links(page):
             k = i
         try:
             pagenew = Page()
-            pagenew.seturl(k)
-            pagenew.extract_html_page()
-            pagenew.getAllText()
+            pagenew.process(k)
             print(k)
             for j in pagenew.H2s:
                 print(j)
@@ -51,4 +28,9 @@ if not url_list:
 else:
     for url in url_list:
         print(url)
-        Analyse_Page(url)
+        page = Page()
+        page.process(url)
+        text=Text()
+        text.inputtext(page.textlist, url)
+        text.plot_cloud()
+        print(page.summary())

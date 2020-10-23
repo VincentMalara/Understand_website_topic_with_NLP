@@ -1,7 +1,5 @@
 from bs4 import BeautifulSoup
 import requests
-#import re
-#import pandas as pd
 
 class Page():
     def __init__(self):
@@ -17,7 +15,14 @@ class Page():
         self.H6s = []
         self.getalldone = False
         self.links = []
+        self.textlist = []
 
+    def process(self, url):
+        self.seturl(url)
+        self.extract_html_page()
+        self.getAllText()
+        self.getLinks()
+        self.cleantext()
 
     def seturl(self, url):
         #add url analysis to pre check
@@ -71,3 +76,6 @@ class Page():
         for link in self.html.findAll('a'): #attrs={'href': re.compile("^http://")}):
             #print(link.get('href'))
             self.links.append(link.get('href'))
+
+    def cleantext(self):
+        self.textlist = [' '.join(x.split()) for x in self.getAllTextCombined()]
