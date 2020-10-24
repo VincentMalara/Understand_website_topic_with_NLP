@@ -1,9 +1,9 @@
 from HTML_parsing import Page
 from Summarize import Text
 import sys
-import nltk
 
 
+#Not used, can be used to take other internal link into account to understand website main topic
 def consider_internal_links(page):
     for i in page.links:
         if i[0] == '/':
@@ -21,16 +21,26 @@ def consider_internal_links(page):
     pass
 
 
-url_list=sys.argv[1:]
+
+url_list=sys.argv[1:] #url to analyse list created from command
 
 if not url_list:
     print("please input an url")
 else:
     for url in url_list:
         print(url)
-        page = Page()
-        page.process(url)
-        text=Text()
-        text.inputtext(page.textlist, url)
-        text.plot_cloud()
-        print(page.summary())
+        page = Page() #page instanciation
+        page.process(url) #html content extraction
+        text = Text() #Text instanciation
+        text.inputtext(page.textlist, url) #page content is input
+        #text.plot_cloud()  #plot cloud to have a visual object to understant website topic, not used
+        text.get_summary() #create a summary of home page
+        print('-' * 10)
+        print('summary: ')
+        print(text.summary)
+        print('-' * 10)
+        print('Topics: ')
+        text.get_N_topic() #extract topics of text via word vectors
+        for topic in text.topics:
+            print('_ ' * 5)
+            print(topic)
