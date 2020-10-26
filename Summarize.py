@@ -4,7 +4,6 @@ import heapq
 from wordcloud import WordCloud
 import matplotlib.pyplot as plt
 import re
-from nltk.corpus import stopwords
 from nltk.stem.wordnet import WordNetLemmatizer
 import string
 import gensim
@@ -143,4 +142,11 @@ class Text():
         doc_term_matrix = [dictionary.doc2bow(doc) for doc in self.textformat]
         Lda = gensim.models.ldamodel.LdaModel
         ldamodel = Lda(doc_term_matrix, num_topics= self.N, id2word=dictionary, passes=50)
-        self.topics = ldamodel.print_topics(num_words=self.Nword)
+        topics = ldamodel.print_topics(num_words=self.Nword)
+        topss=[]
+        for topic in topics:
+            tops=[]
+            for aa in topic[1].split(' + '):
+                tops.append(aa.split('*')[1].replace('"',''))
+            topss.append((' ').join(tops))
+        self.topics=topss
